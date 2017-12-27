@@ -5,8 +5,9 @@
   "main": "webpack.config.js",
   "scripts": {
     "serve": "webpack-dev-server",
-    "build:dev": "webpack -d --watch",
-    "build:prod": "webpack -p"
+    "build:dev": "npm run clean && webpack -d --watch",
+    "build:prod": "npm run clean && cross-env NODE_ENV=production webpack -p",
+    "clean": "rimraf ./dist/*"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "cross-env": "^5.1.3",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^2.30.1",
