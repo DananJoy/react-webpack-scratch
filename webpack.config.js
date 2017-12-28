@@ -5,13 +5,14 @@ webpack = require('webpack');
 
 // environments variables
 var isProd = process.env.NODE_ENV === 'production';    
-var cssConfig = isProd? cssProd : cssDev; 
 var cssDev = ['style-loader', 'css-loader', 'sass-loader'];
 var cssProd = ExtractTextPlugin.extract({
                             fallback: 'style-loader',
                             use: ['css-loader', 'sass-loader'],
                             publicPath: '/dist'
                         });
+var cssConfig = isProd? cssProd : cssDev; 
+
 // main config
 module.exports = {
     entry: {
@@ -33,6 +34,34 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: __dirname + '/node_modules/',
                 use: 'babel-loader'
+            },
+            {
+                test: /\.(jpe?g|png|gz)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/images/'
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            bypassOnDebug: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: 'assets/fonts/'
+                    }
+                } 
             }
         ]
     },
@@ -51,7 +80,7 @@ module.exports = {
             filename: './index.html',
             excludeChunks: ['other'],
             minify: {
-                collapseWhitespace: false
+                collapseWhitespace: isProd
             },
             hash: true      
         }),
@@ -61,7 +90,7 @@ module.exports = {
             filename: './other.html',
             // chunks: ['other'],
             minify: {
-                collapseWhitespace: false
+                collapseWhitespace: isProd
             },
             hash: true      
         }),
@@ -71,6 +100,11 @@ module.exports = {
             allChunks: true
         }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin()
+        new webpack.NamedModulesPlugin(),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jquery: "jQuery",
+            "windows.jQuery": "jquery"
+        }),
     ]
 };

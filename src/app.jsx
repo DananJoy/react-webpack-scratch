@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-console.log('hello from app jsx')
-
 import css from './styles.scss';
+
+global.jQuery = require('jquery');
 
 ReactDOM.render(
     <h1>Hello From React JSX!</h1>,
